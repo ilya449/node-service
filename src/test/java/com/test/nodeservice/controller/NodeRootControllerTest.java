@@ -30,7 +30,7 @@ public class NodeRootControllerTest {
     private WebTestClient webTestClient;
 
     @MockBean
-    NodeService<NodeRoot> service;
+    private NodeService<NodeRoot> service;
 
     @Test
     public void createNodeRoot(){

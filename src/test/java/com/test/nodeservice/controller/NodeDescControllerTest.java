@@ -30,7 +30,7 @@ public class NodeDescControllerTest {
     private WebTestClient webTestClient;
 
     @MockBean
-    NodeService<NodeDesc> service;
+    private NodeService<NodeDesc> service;
 
     @Test
     public void createNodeDesc(){
