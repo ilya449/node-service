@@ -17,6 +17,9 @@ import static org.mockito.Mockito.times;
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class NodeRootServiceTest {
+    public static final String NODE_NAME = "Node root";
+    public static final long FIRST_ID = 1L;
+    public static final int ONE = 1;
     @Autowired
     private NodeRootServiceImpl service;
 
@@ -25,18 +28,18 @@ public class NodeRootServiceTest {
 
     @Test
     public void persist() {
-        NodeRoot node = new NodeRoot(1L, "Node root");
+        NodeRoot node = new NodeRoot(FIRST_ID, NODE_NAME);
         Mockito.when(repository.save(node)).thenReturn(Mono.just(node));
         NodeRoot afterPersist = service.persist(node)
                 .map(e -> new NodeRoot(e.getId(), e.getName())).block();
         Assert.assertEquals(node, afterPersist);
-        Mockito.verify(repository, times(1)).save(node);
+        Mockito.verify(repository, times(ONE)).save(node);
     }
 
     @Test
     public void getAll() {
         Mockito.when(repository.findAll()).thenReturn(Flux.empty());
         Assert.assertEquals(Flux.empty(), service.getAll());
-        Mockito.verify(repository, times(1)).findAll();
+        Mockito.verify(repository, times(ONE)).findAll();
     }
 }

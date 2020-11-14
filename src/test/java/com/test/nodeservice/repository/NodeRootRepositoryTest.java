@@ -15,12 +15,13 @@ import reactor.test.StepVerifier;
 @DirtiesContext
 public class NodeRootRepositoryTest {
     public static final String NODE_ROOT_NAME = "Node root name";
+    public static final long ID = 1L;
     @Autowired
     private NodeRootRepository repository;
 
     @Test
     public void saveNodeRoot() {
-        NodeRoot node = new NodeRoot(1L, NODE_ROOT_NAME);
+        NodeRoot node = new NodeRoot(ID, NODE_ROOT_NAME);
         Mono<NodeRoot> saved = repository.save(node);
         StepVerifier.create(saved)
                 .expectSubscription()
@@ -33,7 +34,7 @@ public class NodeRootRepositoryTest {
     public void getAllRootNodes() {
         StepVerifier.create(repository.findAll())
                 .expectSubscription()
-                .expectNextMatches(e -> e.getId().equals(1L)
+                .expectNextMatches(e -> e.getId().equals(ID)
                         && e.getName().equals(NODE_ROOT_NAME))
                 .verifyComplete();
     }

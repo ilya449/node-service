@@ -1,6 +1,5 @@
 package com.test.nodeservice.controller;
 
-import com.test.nodeservice.controller.NodeDescController;
 import com.test.nodeservice.dto.NodeDescDto;
 import com.test.nodeservice.model.NodeDesc;
 import com.test.nodeservice.service.NodeService;
@@ -26,6 +25,15 @@ import static org.mockito.Mockito.times;
 @Import({NodeDescMapper.class})
 public class NodeDescControllerTest {
     public static final String NODE_DESC_URL = "/node-desc";
+    public static final String FIRST_NODE_NAME = "First node desc";
+    public static final String FIRST_NODE_DESCRIPTION = "First node description";
+    public static final String SECOND_NODE_NAME = "Second node desc";
+    public static final String SECOND_NODE_DESCRIPTION = "Second node description";
+    public static final long FIRST_ID = 1L;
+    public static final long SECOND_ID = 2L;
+    public static final int ZERO = 0;
+    public static final int ONE = 1;
+    public static final int TWO = 2;
     @Autowired
     private WebTestClient webTestClient;
 
@@ -34,7 +42,7 @@ public class NodeDescControllerTest {
 
     @Test
     public void createNodeDesc(){
-        NodeDesc node = new NodeDesc(1L, "First node desc", "First node description");
+        NodeDesc node = new NodeDesc(FIRST_ID, FIRST_NODE_NAME, FIRST_NODE_DESCRIPTION);
 
         Mockito.when(service.persist(node)).thenReturn(Mono.just(node));
         webTestClient.post()
@@ -44,17 +52,17 @@ public class NodeDescControllerTest {
                 .exchange()
                 .expectStatus().isCreated()
                 .expectBody()
-                .jsonPath("$.id").isEqualTo(1L)
-                .jsonPath("$.name").isEqualTo("First node desc")
-                .jsonPath("$.description").isEqualTo("First node description");
+                .jsonPath("$.id").isEqualTo(FIRST_ID)
+                .jsonPath("$.name").isEqualTo(FIRST_NODE_NAME)
+                .jsonPath("$.description").isEqualTo(FIRST_NODE_DESCRIPTION);
 
-        Mockito.verify(service, times(1)).persist(node);
+        Mockito.verify(service, times(ONE)).persist(node);
     }
 
     @Test
     public void getAllDescNodesIfPresent() {
-        NodeDesc firstNode = new NodeDesc(1L, "First node desc", "First node description");
-        NodeDesc secondNode = new NodeDesc(2L, "Second node desc", "Second node description");
+        NodeDesc firstNode = new NodeDesc(FIRST_ID, FIRST_NODE_NAME, FIRST_NODE_DESCRIPTION);
+        NodeDesc secondNode = new NodeDesc(SECOND_ID, SECOND_NODE_NAME, SECOND_NODE_DESCRIPTION);
 
         Mockito.when(service.getAll()).thenReturn(Flux.just(firstNode, secondNode));
 
@@ -63,13 +71,13 @@ public class NodeDescControllerTest {
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
                 .expectBodyList(NodeDescDto.class)
-                .hasSize(2)
+                .hasSize(TWO)
                 .consumeWith((response) -> {
                     List<NodeDescDto> nodes =  response.getResponseBody();
                     assert nodes != null;
                     nodes.forEach((node) -> assertNotNull(node.getId()));
                 });
-        Mockito.verify(service, times(1)).getAll();
+        Mockito.verify(service, times(ONE)).getAll();
     }
 
     @Test
@@ -81,7 +89,7 @@ public class NodeDescControllerTest {
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
                 .expectBodyList(NodeDescDto.class)
-                .hasSize(0);
-        Mockito.verify(service, times(1)).getAll();
+                .hasSize(ZERO);
+        Mockito.verify(service, times(ONE)).getAll();
     }
 }

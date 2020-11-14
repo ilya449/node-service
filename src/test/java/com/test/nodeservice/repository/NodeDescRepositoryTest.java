@@ -16,13 +16,14 @@ import reactor.test.StepVerifier;
 public class NodeDescRepositoryTest {
     public static final String NODE_DESC_NAME = "Node desc name";
     public static final String NODE_DESC_DESCRIPTION = "Node description";
+    public static final long ID = 1L;
 
     @Autowired
     private NodeDescRepository repository;
 
     @Test
     public void saveNodeRoot() {
-        NodeDesc node = new NodeDesc(1L, NODE_DESC_NAME, NODE_DESC_DESCRIPTION);
+        NodeDesc node = new NodeDesc(ID, NODE_DESC_NAME, NODE_DESC_DESCRIPTION);
         Mono<NodeDesc> saved = repository.save(node);
         StepVerifier.create(saved)
                 .expectSubscription()
@@ -35,7 +36,7 @@ public class NodeDescRepositoryTest {
     public void getAllRootNodes() {
         StepVerifier.create(repository.findAll())
                 .expectSubscription()
-                .expectNextMatches(e -> e.getId().equals(1L)
+                .expectNextMatches(e -> e.getId().equals(ID)
                         && e.getName().equals(NODE_DESC_NAME))
                 .verifyComplete();
     }

@@ -1,6 +1,5 @@
 package com.test.nodeservice.controller;
 
-import com.test.nodeservice.controller.NodeRootController;
 import com.test.nodeservice.dto.NodeRootDto;
 import com.test.nodeservice.model.NodeRoot;
 import com.test.nodeservice.service.NodeService;
@@ -26,6 +25,13 @@ import static org.mockito.Mockito.times;
 @Import({NodeRootMapper.class})
 public class NodeRootControllerTest {
     public static final String NODE_ROOT_URL = "/node-root";
+    public static final String FIRST_NODE_NAME = "First node root";
+    public static final String SECOND_NODE_NAME = "Second node root";
+    public static final long FIRST_ID = 1L;
+    public static final long SECOND_ID = 2L;
+    public static final int ZERO = 0;
+    public static final int ONE = 1;
+    public static final int TWO = 2;
     @Autowired
     private WebTestClient webTestClient;
 
@@ -34,7 +40,7 @@ public class NodeRootControllerTest {
 
     @Test
     public void createNodeRoot(){
-        NodeRoot node = new NodeRoot(1L, "First node root");
+        NodeRoot node = new NodeRoot(FIRST_ID, FIRST_NODE_NAME);
 
         Mockito.when(service.persist(node)).thenReturn(Mono.just(node));
         webTestClient.post()
@@ -44,16 +50,16 @@ public class NodeRootControllerTest {
                 .exchange()
                 .expectStatus().isCreated()
                 .expectBody()
-                .jsonPath("$.id").isEqualTo(1L)
-                .jsonPath("$.name").isEqualTo("First node root");
+                .jsonPath("$.id").isEqualTo(FIRST_ID)
+                .jsonPath("$.name").isEqualTo(FIRST_NODE_NAME);
 
-        Mockito.verify(service, times(1)).persist(node);
+        Mockito.verify(service, times(ONE)).persist(node);
     }
 
     @Test
     public void getAllRootNodesIfPresent() {
-        NodeRoot firstNode = new NodeRoot(1L, "First node root");
-        NodeRoot secondNode = new NodeRoot(2L, "Second node root");
+        NodeRoot firstNode = new NodeRoot(FIRST_ID, FIRST_NODE_NAME);
+        NodeRoot secondNode = new NodeRoot(SECOND_ID, SECOND_NODE_NAME);
 
         Mockito.when(service.getAll()).thenReturn(Flux.just(firstNode, secondNode));
 
@@ -62,13 +68,13 @@ public class NodeRootControllerTest {
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
                 .expectBodyList(NodeRootDto.class)
-                .hasSize(2)
+                .hasSize(TWO)
                 .consumeWith((response) -> {
                     List<NodeRootDto> nodes =  response.getResponseBody();
                     assert nodes != null;
                     nodes.forEach((node) -> assertNotNull(node.getId()));
                 });
-        Mockito.verify(service, times(1)).getAll();
+        Mockito.verify(service, times(ONE)).getAll();
     }
 
     @Test
@@ -80,7 +86,7 @@ public class NodeRootControllerTest {
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
                 .expectBodyList(NodeRootDto.class)
-                .hasSize(0);
-        Mockito.verify(service, times(1)).getAll();
+                .hasSize(ZERO);
+        Mockito.verify(service, times(ONE)).getAll();
     }
 }

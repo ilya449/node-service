@@ -13,20 +13,22 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class NodeRootMapperTest {
+    public static final String NODE_NAME = "Root node";
+    public static final long FIRST_ID = 1L;
     @Autowired
     private NodeRootMapper mapper;
 
     @Test
     public void mapToDto() {
-        NodeRootDto expected = new NodeRootDto(1L, "Root node");
-        NodeRootDto actual = mapper.mapToDto(new NodeRoot(1L, "Root node"));
+        NodeRootDto expected = new NodeRootDto(FIRST_ID, NODE_NAME);
+        NodeRootDto actual = mapper.mapToDto(new NodeRoot(FIRST_ID, NODE_NAME));
         Assert.assertEquals(expected, actual);
     }
 
     @Test
     public void mapFromDto() {
-        NodeRoot expected = new NodeRoot(1L, "Root node");
-        NodeRoot actual = mapper.mapFromDto(new NodeRootDto(1L, "Root node"));
+        NodeRoot expected = new NodeRoot(FIRST_ID, NODE_NAME);
+        NodeRoot actual = mapper.mapFromDto(new NodeRootDto(FIRST_ID, NODE_NAME));
         Assert.assertEquals(expected, actual);
     }
 }
